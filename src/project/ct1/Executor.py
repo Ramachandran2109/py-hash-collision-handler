@@ -13,17 +13,11 @@ from project.ct1.hash.collisions.CollisionHandlerType import CollisionHandlerTyp
 inputArray = [];
 collisionHandlerType = 0;
 
-def getUserInputs():
-    totalValues = ast.literal_eval(input("Enter number of values to be inserted : "));
-    global inputArray
-    inputArray = ["" for i in range(totalValues)];
-    
-    for i in range(totalValues):
-        inputArray[i] = ast.literal_eval(input("Enter " + str(i + 1) + " value : "));
+#criteria given for the max array size in the assignment
+max_size = {1:5, 2:10, 3:20, 4:10, 5:6};
 
 def getCollisionHandlerType():
     
-    print("");
     collisionHandlerTypes = list(CollisionHandlerType);
     for i in range(len(collisionHandlerTypes)) :
         print (collisionHandlerTypes[i].value,". ", collisionHandlerTypes[i].name); 
@@ -51,9 +45,23 @@ def getCollisionHandlerType():
                 print("Invalid Input, Please select a valid collision type");
                 for i in range(len(collisionHandlerTypes)) :
                     print (collisionHandlerTypes[i].value,". ", collisionHandlerTypes[i].name);
+
+def getUserInputs():
+    while True:
+        print("");
+        totalValues = ast.literal_eval(input("Enter number of values to be inserted (Max : {}) : ".format(max_size.get(collisionHandlerType))));
+        if (totalValues <= max_size.get(collisionHandlerType)):
+            global inputArray
+            inputArray = ["" for i in range(totalValues)];
+            
+            for i in range(totalValues):
+                inputArray[i] = ast.literal_eval(input("Enter " + str(i + 1) + " value : "));
+            break;
+        else:
+            print("Value should not exceed more than {}".format(max_size.get(collisionHandlerType)));
+        
                     
 def execute():
-    getCollisionHandlerType();
     print("");
     print("Input values : ", inputArray);
     print("Collision Handler : ", CollisionHandlerType(collisionHandlerType).name);
@@ -65,6 +73,7 @@ def execute():
     print("After Hashing : ", hashedArray);
     print("");
 
+getCollisionHandlerType();
 getUserInputs();
 execute();
 
@@ -72,6 +81,7 @@ while True:
     tryOtherCollision = input("Do you wish to try any other collision with the same input (Y/N) ?");
     match tryOtherCollision.upper():
         case "Y":
+            getCollisionHandlerType();
             execute();
         case "N":
             break;
@@ -82,6 +92,7 @@ while True:
     tryOtherCollision = input("Do you wish to try any other collision with the different input (Y/N) ?");
     match tryOtherCollision.upper():
         case "Y":
+            getCollisionHandlerType();
             getUserInputs();
             execute();
         case "N":
@@ -90,4 +101,4 @@ while True:
             print("Invalid input try again...");
 
 print("");
-print("................")
+print("*****END*****")

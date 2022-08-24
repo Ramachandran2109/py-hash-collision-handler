@@ -16,7 +16,6 @@ class SeparateChaining(CollisionHandler):
     def _handleCollision(self, collisionInputBean: CollisionInputBean):
         resultArray = [];
         oldValue = collisionInputBean.getResultIndexValue();
-        print("old value : ", oldValue);
         newValue = collisionInputBean.getInputValue();
         
         if (type(oldValue) is list):
