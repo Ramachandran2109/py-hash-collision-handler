@@ -6,6 +6,8 @@ Created on Aug 22, 2022
 
 from abc import abstractmethod
 import abc
+from project.ct1.hash.collisions.bean.CollisionInputBean import CollisionInputBean
+
 
 
 class CollisionHandler(abc.ABC):
@@ -16,21 +18,24 @@ class CollisionHandler(abc.ABC):
         self._arrayToHash = arrayToHash;
     
     @abstractmethod
-    def _handleCollision(self, oldValue, newValue):
+    def _handleCollision(self, collisionInputBean:CollisionInputBean):
         pass;
     
     def __hashcode(self, val):
-        return val % (len(self._arrayToHash) - 1);
+        return val % (len(self._arrayToHash));
     
     def doHash(self):
-        hashedArray = ["" for i in range(len(self._arrayToHash))];
-        for i in range(len(self._arrayToHash)):
-            index = self.__hashcode(self._arrayToHash[i]);
-            oldValue = hashedArray[index];
-            if (oldValue == ""):
-                hashedArray[index] = self._arrayToHash[i];
+        hashedArray = ["" for index in range(len(self._arrayToHash))];
+        for index in range(len(self._arrayToHash)):
+            newIndex = self.__hashcode(self._arrayToHash[index]);
+            occupiedNewIndexValue = hashedArray[newIndex];
+            if (occupiedNewIndexValue == ""):
+                hashedArray[newIndex] = self._arrayToHash[index];
             else:
-                hashedArray[index] = self._handleCollision(oldValue, self._arrayToHash[i]);
+                collisionInputBean = CollisionInputBean(
+                    index, occupiedNewIndexValue, self._arrayToHash[index], hashedArray
+                );
+                self._handleCollision(collisionInputBean);
         
         return hashedArray;
     

@@ -7,12 +7,18 @@ Requirement :
     Implement doHash table where collisions are handled using separate chaining. Keep MAX size of arr in hashtable as 5.
 '''
 
+from project.ct1.hash.collisions.bean.CollisionInputBean import CollisionInputBean
 from project.ct1.hash.collisions.handler.CollisionHandler import CollisionHandler
+
 
 class SeparateChaining(CollisionHandler):
     
-    def _handleCollision(self, oldValue, newValue):
+    def _handleCollision(self, collisionInputBean: CollisionInputBean):
         resultArray = [];
+        oldValue = collisionInputBean.getResultIndexValue();
+        print("old value : ", oldValue);
+        newValue = collisionInputBean.getInputValue();
+        
         if (type(oldValue) is list):
             oldValue.append(newValue);
             resultArray = oldValue;
@@ -20,5 +26,5 @@ class SeparateChaining(CollisionHandler):
             resultArray.append(oldValue);
             resultArray.append(newValue);
             
-        return resultArray;
+        collisionInputBean.getResultArray()[collisionInputBean.getNewResultIndex()] = resultArray;
             
