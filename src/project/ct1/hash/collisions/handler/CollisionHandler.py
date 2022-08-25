@@ -12,31 +12,8 @@ from project.ct1.hash.collisions.bean.CollisionInputBean import CollisionInputBe
 
 class CollisionHandler(abc.ABC):
     
-    _arrayToHash = [];
-    
-    def __init__(self, arrayToHash):
-        self._arrayToHash = arrayToHash;
-    
     @abstractmethod
-    def _handleCollision(self, collisionInputBean:CollisionInputBean):
+    def handleCollision(self, collisionInputBean:CollisionInputBean):
         pass;
-    
-    def __hashcode(self, val):
-        return val % (len(self._arrayToHash));
-    
-    def doHash(self):
-        hashedArray = ["" for index in range(len(self._arrayToHash))];
-        for index in range(len(self._arrayToHash)):
-            newIndex = self.__hashcode(self._arrayToHash[index]);
-            occupiedNewIndexValue = hashedArray[newIndex];
-            if (occupiedNewIndexValue == ""):
-                hashedArray[newIndex] = self._arrayToHash[index];
-            else:
-                collisionInputBean = CollisionInputBean(
-                    index, occupiedNewIndexValue, self._arrayToHash[index], hashedArray
-                );
-                self._handleCollision(collisionInputBean);
-        
-        return hashedArray;
     
     

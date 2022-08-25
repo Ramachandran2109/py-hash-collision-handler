@@ -66,7 +66,7 @@ def execute():
     print("Input values : ", inputArray);
     print("Collision Handler : ", CollisionHandlerType(collisionHandlerType).name);
     
-    hashing = Hashing.getCollisionHandlerInstance(collisionHandlerType, inputArray);
+    hashing = Hashing(collisionHandlerType, inputArray);
     hashedArray = hashing.doHash();
     
     print("");
