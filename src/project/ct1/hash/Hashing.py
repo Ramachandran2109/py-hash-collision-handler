@@ -3,53 +3,95 @@ Created on Aug 22, 2022
 
 @author: Ramachandran S
 '''
-from project.ct1.hash.collisions.CollisionHandlerType import CollisionHandlerType
-from project.ct1.hash.collisions.bean.CollisionInputBean import CollisionInputBean
-from project.ct1.hash.collisions.handler.CuckooHashing import CuckooHashing
-from project.ct1.hash.collisions.handler.DoubleHashing import DoubleHashing
-from project.ct1.hash.collisions.handler.LinearProbing import LinearProbing
-from project.ct1.hash.collisions.handler.QuadraticProbing import QuadraticProbing
-from project.ct1.hash.collisions.handler.SeparateChaining import SeparateChaining
+from abc import abstractmethod
+import abc
+from math import ceil, floor
+import sys
 
 
-class Hashing:
+class Hashing(abc.ABC):
     
-    def __init__(self, collisionHandlerType : CollisionHandlerType, arrayToHash : []):
+    __threshold = 0;
+    __valueCount = 0;
+    __loadFactor = 0.75;
+    __initialCapacity = 11;
+    
+    @abstractmethod
+    def _handleCollision(self, conflictedIndex, newValue):
+        self._hashedArray[conflictedIndex] = newValue;
+    
+    
+    def __init__(self, maxSize : int, arrayToHash : []):
+        self.__maxSize = maxSize;
         self.__arrayToHash = arrayToHash;
-        self.__inputArrayLength = len(arrayToHash);
-        self.__collisionHandlerType = collisionHandlerType;
+        
+        self.__initialCapacity = max(ceil(len(self.__arrayToHash) / 2), 3);
+        self.__threshold = min(floor(self.__initialCapacity * self.__loadFactor), sys.maxsize + 1);
+        
+        self._hashedArray = ["" for _ in range(self.__initialCapacity)];
         
     
-    def __hashcode(self, val):
-        return val % (self.__inputArrayLength);
+    def __hashCode(self, value):
+        return (hash(value) & 0x7FFFFFFF);
+    
+        
+    def __hashIndex(self, value):
+        return self.__hashCode(value) % (self.__getLength());
     
     
-    def __getCollisionHandlerInstance(self, collisionHandlerType : CollisionHandlerType):
+    def __rehash(self):
+        oldCapacity = self.__getLength();
+        newCapacity = (oldCapacity << 1) + 1;
         
-        instances = {
-            1 : SeparateChaining(),
-            2 : LinearProbing(),
-            3 : QuadraticProbing(),
-            4 : DoubleHashing(),
-            5 : CuckooHashing()
-        }
+        if (newCapacity >= self.__maxSize):
+            if (oldCapacity == self.__maxSize):
+                return;
+            else:
+                newCapacity = self.__maxSize;
         
-        return instances[collisionHandlerType];
+        self.__threshold = min(newCapacity * self.__loadFactor, sys.maxsize + 1);
+        newHashedArray = self._hashedArray.copy();
+        self._hashedArray = ["" for _ in range(newCapacity)];
+        
+        self.__valueCount = 0;
+        for index in range(len(newHashedArray)):
+            value = newHashedArray[index];
+            if (type(value) is list):
+                for valueIndex in range(len(value)):
+                    self.__handleHashing(value[valueIndex]);
+            else:    
+                self.__handleHashing(newHashedArray[index]);
+    
+    
+    def __handleHashing(self, value):
+        newIndex = self.__hashIndex(value);
+        oldValue = self._hashedArray[newIndex];
+        if (oldValue == ''):
+            self._hashedArray[newIndex] = value;
+        else:
+            self._handleCollision(newIndex, value);
+            
+        self.__valueCount+=1;
+            
+            
+    def __getLength(self):
+        return len(self._hashedArray);
+    
+    
+    def _add(self, value):
+        
+        if (self.__valueCount >= self.__threshold):
+            self.__rehash();
+            
+        self.__handleHashing(value);
+    
     
     def doHash(self):
-        hashedArray = ["" for index in range(self.__inputArrayLength)];
-        handler = self.__getCollisionHandlerInstance(self.__collisionHandlerType);
+        for index in range(len(self.__arrayToHash)):
+            self._add(self.__arrayToHash[index]);
         
-        for index in range(self.__inputArrayLength):
-            newIndex = self.__hashcode(self.__arrayToHash[index]);
-            occupiedNewIndexValue = hashedArray[newIndex];
-            if (occupiedNewIndexValue == ""):
-                hashedArray[newIndex] = self.__arrayToHash[index];
-            else:
-                collisionInputBean = CollisionInputBean(
-                    index, occupiedNewIndexValue, self.__arrayToHash[index], hashedArray
-                );
-                handler.handleCollision(collisionInputBean);
+        return self._hashedArray;
+    
+    
         
-        return hashedArray;
         

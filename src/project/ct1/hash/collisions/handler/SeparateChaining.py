@@ -12,23 +12,16 @@ Requirement :
     
 '''
 
-from project.ct1.hash.collisions.bean.CollisionInputBean import CollisionInputBean
-from project.ct1.hash.collisions.handler.CollisionHandler import CollisionHandler
+from project.ct1.hash.Hashing import Hashing
 
 
-class SeparateChaining(CollisionHandler):
+class SeparateChaining(Hashing):
     
-    def handleCollision(self, collisionInputBean: CollisionInputBean):
-        resultArray = [];
-        oldValue = collisionInputBean.getResultIndexValue();
-        newValue = collisionInputBean.getInputValue();
-        
+    def _handleCollision(self, conflictedIndex, newValue):
+        oldValue = self._hashedArray[conflictedIndex];
         if (type(oldValue) is list):
-            oldValue.append(newValue);
-            resultArray = oldValue;
-        else :
-            resultArray.append(oldValue);
-            resultArray.append(newValue);
-            
-        collisionInputBean.getResultArray()[collisionInputBean.getNewResultIndex()] = resultArray;
-            
+            self._hashedArray.append(newValue);
+        else:
+            self._hashedArray[conflictedIndex] = [oldValue, newValue];
+        
+    

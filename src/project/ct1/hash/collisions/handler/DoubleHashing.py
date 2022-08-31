@@ -12,12 +12,11 @@ Requirement :
 
 '''
 
-from project.ct1.hash.collisions.bean.CollisionInputBean import CollisionInputBean
-from project.ct1.hash.collisions.handler.CollisionHandler import CollisionHandler
+from project.ct1.hash.Hashing import Hashing
 
 
-class DoubleHashing(CollisionHandler):
+class DoubleHashing(Hashing):
     
-    def handleCollision(self, collisionInputBean: CollisionInputBean):
+    def _handleCollision(self, conflictedIndex, newValue):
         pass;
             

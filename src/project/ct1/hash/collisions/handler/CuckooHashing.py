@@ -11,12 +11,11 @@ Requirement :
     Registration Number : PA2212005010011
 
 '''
-from project.ct1.hash.collisions.bean.CollisionInputBean import CollisionInputBean
-from project.ct1.hash.collisions.handler.CollisionHandler import CollisionHandler
+from project.ct1.hash.Hashing import Hashing
 
 
-class CuckooHashing(CollisionHandler):
+class CuckooHashing(Hashing):
     
-    def handleCollision(self, collisionInputBean: CollisionInputBean):
+    def _handleCollision(self, conflictedIndex, newValue):
         pass;
             

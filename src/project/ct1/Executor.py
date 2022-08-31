@@ -6,15 +6,16 @@ Created on Aug 21, 2022
 
 import ast
 
-from project.ct1.hash.Hashing import Hashing
 from project.ct1.hash.collisions.CollisionHandlerType import CollisionHandlerType
+from project.ct1.hash.HashFactory import HashFactory
 
 
 inputArray = [];
+hashedArray = [];
 collisionHandlerType = 0;
 
 #criteria given for the max array size in the assignment
-max_size = {1:5, 2:10, 3:20, 4:10, 5:6};
+max_size = {1:10, 2:10, 3:20, 4:10, 5:6};
 
 def getCollisionHandlerType():
     
@@ -54,24 +55,28 @@ def getUserInputs():
             global inputArray
             inputArray = ["" for i in range(totalValues)];
             
+            global hashedArray
+            hashedArray = [];
+            
             for i in range(totalValues):
                 inputArray[i] = ast.literal_eval(input("Enter " + str(i + 1) + " value : "));
             break;
         else:
             print("Value should not exceed more than {}".format(max_size.get(collisionHandlerType)));
-        
+   
                     
 def execute():
     print("");
     print("Input values : ", inputArray);
     print("Collision Handler : ", CollisionHandlerType(collisionHandlerType).name);
     
-    hashing = Hashing(collisionHandlerType, inputArray);
+    hashing = HashFactory.getInstance(collisionHandlerType, max_size.get(collisionHandlerType), inputArray);
     hashedArray = hashing.doHash();
     
     print("");
     print("After Hashing : ", hashedArray);
     print("");
+    
 
 getCollisionHandlerType();
 getUserInputs();
