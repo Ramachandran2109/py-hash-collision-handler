@@ -13,32 +13,31 @@ Requirement :
 '''
 
 from project.ct1.hash.Hashing import Hashing
+from project.ct1.util.NumberUtil import NumberUtil
 
 
 class DoubleHashing(Hashing):
     
+    __counter = None;
+    
+    def __secondaryHashFunction(self, value):
+        prime = NumberUtil.getPrime(len(self._hashedArray));
+        return prime - (self._hashCode(value) % prime)
+    
     def _handleCollision(self, conflictedIndex, newValue):
-            i=1
-            PreviouseIndex=0
-            while(1):  
-                if conflictedIndex==len(self._hashedArray)-1:
-                    oldValue = self._hashedArray[conflictedIndex]; 
-                    if oldValue: 
-                        conflictedIndex=0 
-                    else:  
-                        self._hashedArray[conflictedIndex]=newValue
-                elif conflictedIndex<len(self._hashedArray)-1: 
-                    oldValue = self._hashedArray[conflictedIndex]; 
-                    if oldValue: 
-                        #Calculating Next Possible Index
-                        Secondary_conflictedIndex=self.nearestPrime() - (newValue % self.nearestPrime()) 
-                        Secondary_conflictedIndex=(conflictedIndex + (i*Secondary_conflictedIndex)) % len(self._hashedArray)
-                        PreviouseIndex=conflictedIndex
-                        conflictedIndex=Secondary_conflictedIndex
-                        i+=1
-                    else: 
-                        self._hashedArray[conflictedIndex]=newValue
-                else:
-                    #if  hash id is greater than table index then new hashid will be start from index 0 in cyclic order
-                    conflictedIndex= ((0+conflictedIndex) -(len(self._hashedArray)-PreviouseIndex))-1
+        if (conflictedIndex >= self._getLength() -1):
+            conflictedIndex = -1;
+            self._recursiveCount += 1;
+            self.__counter = 0;
+        else:
+            if (self.__counter is None):
+                self.__counter = 0
             
+            self.__counter += 1
+               
+        conflictedIndex =  conflictedIndex + (self.__counter * self.__secondaryHashFunction(newValue))
+        if (conflictedIndex >= self._getLength() -1):
+            self._handleCollision(conflictedIndex, newValue)
+        else:
+            self._addToIndex(conflictedIndex, newValue)
+                    

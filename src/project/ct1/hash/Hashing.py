@@ -44,12 +44,8 @@ class Hashing(abc.ABC):
         self.__nextPrime = NumberUtil.getPrime(self._getLength())
         
         
-    def __hashCode(self, value):
-        return (hash(value) & 0x7FFFFFFF)
-    
-    
     def __hashFunction(self, value):
-        return (floor(self.__hashCode(value) / self._getBaseValueDivisor())) % (self._getLength())
+        return (floor(self._hashCode(value) / self._getBaseValueDivisor())) % (self._getLength())
      
      
     def __handleHashing(self, value):
@@ -103,6 +99,10 @@ class Hashing(abc.ABC):
     @abstractmethod
     def _handleCollision(self, conflictedIndex, newValue):
         self._hashedArray[conflictedIndex] = newValue    
+        
+        
+    def _hashCode(self, value):
+        return (hash(value) & 0x7FFFFFFF)
      
            
     def _getLength(self):
