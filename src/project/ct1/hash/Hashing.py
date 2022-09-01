@@ -133,6 +133,10 @@ class Hashing(abc.ABC):
         
         if (self._enableRehash and self._recursiveCount > 1):
             self.__rehash()
+        elif (self._enableRehash == False and self._recursiveCount > 1) :
+            if (value is not None):
+                self._leftOverValues.add(value)
+            return
             
         self.__handleHashingForIndex(index, value)
         
