@@ -19,7 +19,7 @@ class DoubleHashing(Hashing):
     
     def _handleCollision(self, conflictedIndex, newValue):
         
-            oldValue = self._hashedArray[conflictedIndex];
+            oldValue = self._hashedArray[conflictedIndex]
             if oldValue:
                 Secondary_conflictedIndex=self.nearestPrime() - (newValue % self.nearestPrime()) 
                 if Secondary_conflictedIndex==len(self._hashedArray)-1:

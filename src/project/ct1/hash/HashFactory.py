@@ -19,15 +19,15 @@ class HashFactory:
         
         match collisionHandlerType:
             case 1:
-                return SeparateChaining(maxSize, arrayToHash);
+                return SeparateChaining(maxSize, arrayToHash)
             case 2:
-                return LinearProbing(maxSize, arrayToHash);
+                return LinearProbing(maxSize, arrayToHash)
             case 3:
-                return QuadraticProbing(maxSize, arrayToHash);
+                return QuadraticProbing(maxSize, arrayToHash)
             case 4:
-                return DoubleHashing(maxSize, arrayToHash);
+                return DoubleHashing(maxSize, arrayToHash)
             case 5:
-                return CuckooHashing(maxSize, arrayToHash);
+                return CuckooHashing(maxSize, arrayToHash)
             case _:
-                return Hashing(maxSize, arrayToHash);
+                return Hashing(maxSize, arrayToHash)
                 
