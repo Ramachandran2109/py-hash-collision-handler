@@ -78,6 +78,8 @@ def execute():
     print("");
     
 
+print("*****BEGIN*****")
+print("");
 getCollisionHandlerType();
 getUserInputs();
 execute();
@@ -93,17 +95,6 @@ while True:
         case _:
             print("Invalid input try again...");
             
-while True:
-    tryOtherCollision = input("Do you wish to try any other collision with the different input (Y/N) ?");
-    match tryOtherCollision.upper():
-        case "Y":
-            getCollisionHandlerType();
-            getUserInputs();
-            execute();
-        case "N":
-            break;
-        case _:
-            print("Invalid input try again...");
 
 print("");
 print("*****END*****")

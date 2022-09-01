@@ -17,10 +17,14 @@ from project.ct1.hash.Hashing import Hashing
 
 class SeparateChaining(Hashing):
     
+    def __init__(self, maxSize : int, arrayToHash : []):
+        super().__init__(maxSize, arrayToHash);
+        self._enableRehash = False;
+    
     def _handleCollision(self, conflictedIndex, newValue):
         oldValue = self._hashedArray[conflictedIndex];
         if (type(oldValue) is list):
-            self._hashedArray.append(newValue);
+            oldValue.append(newValue);
         else:
             self._hashedArray[conflictedIndex] = [oldValue, newValue];
         

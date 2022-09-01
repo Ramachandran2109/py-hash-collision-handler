@@ -3,10 +3,12 @@ Created on Aug 22, 2022
 
 @author: Ramachandran S
 '''
+
 from abc import abstractmethod
 import abc
 from math import ceil, floor
 import sys
+from project.ct1.util.NumberUtil import NumberUtil
 
 
 class Hashing(abc.ABC):
@@ -16,44 +18,63 @@ class Hashing(abc.ABC):
     __loadFactor = 0.75;
     __initialCapacity = 11;
     
-    @abstractmethod
-    def _handleCollision(self, conflictedIndex, newValue):
-        self._hashedArray[conflictedIndex] = newValue;
-    
-    
     def __init__(self, maxSize : int, arrayToHash : []):
-        self.__maxSize = maxSize;
-        self.__arrayToHash = arrayToHash;
+        self._maxSize = maxSize;
+        self._arrayToHash = arrayToHash;
         
-        self.__initialCapacity = max(ceil(len(self.__arrayToHash) / 2), 3);
+        self.__initialCapacity = max(ceil(len(self._arrayToHash) / 2), 3);
         self.__threshold = min(floor(self.__initialCapacity * self.__loadFactor), sys.maxsize + 1);
         
-        self._hashedArray = ["" for _ in range(self.__initialCapacity)];
+        self.__initHashedArray__(self.__initialCapacity);
+        self.__baseValueDivisor = 1;
+        
+        self._leftOverValues = set();
+        self._recursiveCount = 0;
+        self._enableRehash = True;
         
     
+    def __initHashedArray__(self, capacity):
+        self._hashedArray = ["" for _ in range(capacity)];
+        self.__nextPrime = NumberUtil.getPrime(self._getLength());
+        
+        
     def __hashCode(self, value):
         return (hash(value) & 0x7FFFFFFF);
     
-        
-    def __hashIndex(self, value):
-        return self.__hashCode(value) % (self.__getLength());
     
+    def __hashFunction(self, value):
+        return (floor(self.__hashCode(value) / self._getBaseValueDivisor())) % (self._getLength());
+     
+     
+    def __handleHashing(self, value):
+        
+        newIndex = self.__hashFunction(value);
+        oldValue = self._hashedArray[newIndex];
+        
+        if (oldValue == ''):
+            self._hashedArray[newIndex] = value;
+        else:
+            self._handleCollision(newIndex, value);
+            
+        self.__valueCount+=1;
+        
     
     def __rehash(self):
-        oldCapacity = self.__getLength();
+        oldCapacity = self._getLength();
         newCapacity = (oldCapacity << 1) + 1;
         
-        if (newCapacity >= self.__maxSize):
-            if (oldCapacity == self.__maxSize):
+        if (newCapacity >= self._maxSize):
+            if (oldCapacity == self._maxSize):
                 return;
             else:
-                newCapacity = self.__maxSize;
+                newCapacity = self._maxSize;
         
         self.__threshold = min(newCapacity * self.__loadFactor, sys.maxsize + 1);
         newHashedArray = self._hashedArray.copy();
-        self._hashedArray = ["" for _ in range(newCapacity)];
         
+        self.__initHashedArray__(newCapacity);
         self.__valueCount = 0;
+        
         for index in range(len(newHashedArray)):
             value = newHashedArray[index];
             if (type(value) is list):
@@ -63,34 +84,53 @@ class Hashing(abc.ABC):
                 self.__handleHashing(newHashedArray[index]);
     
     
-    def __handleHashing(self, value):
-        newIndex = self.__hashIndex(value);
-        oldValue = self._hashedArray[newIndex];
-        if (oldValue == ''):
-            self._hashedArray[newIndex] = value;
-        else:
-            self._handleCollision(newIndex, value);
-            
-        self.__valueCount+=1;
-            
-            
-    def __getLength(self):
+        
+    @abstractmethod
+    def _handleCollision(self, conflictedIndex, newValue):
+        self._hashedArray[conflictedIndex] = newValue;    
+     
+           
+    def _getLength(self):
         return len(self._hashedArray);
+    
+    
+    def _getPrime(self):
+        return self.__nextPrime;
+    
+    
+    def _getBaseValueDivisor(self):
+        return self.__baseValueDivisor;
+        
+    
+    def _setBaseValueDivisor(self, value):
+        self.__baseValueDivisor = value;
+        
+    
+    def _getHashedArray(self):
+        return self._hashedArray;
+    
+    
+    def _getLeftOverValues(self):
+        return self._leftOverValues;
     
     
     def _add(self, value):
         
-        if (self.__valueCount >= self.__threshold):
+        if (self.__valueCount >= self.__threshold and self._enableRehash):
             self.__rehash();
             
         self.__handleHashing(value);
     
     
     def doHash(self):
-        for index in range(len(self.__arrayToHash)):
-            self._add(self.__arrayToHash[index]);
+        for index in range(len(self._arrayToHash)):
+            self._recursiveCount = 0;
+            self._add(self._arrayToHash[index]);
         
-        return self._hashedArray;
+        if (len(self._getLeftOverValues()) > 0):
+            print("Unable to find index for the values : ", self._getLeftOverValues());
+        
+        return self._getHashedArray();
     
     
         
