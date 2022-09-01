@@ -81,6 +81,7 @@ def execute():
     print("")
     print("Input values : ", inputArray)
     print("Collision Handler : ", CollisionHandlerType(collisionHandlerType).name)
+    print("Rehashing Enabled : ", enableRehash)
     
     hashing = HashFactory.getInstance(collisionHandlerType, max_size.get(collisionHandlerType), enableRehash, inputArray)
     hashedArray = hashing.doHash()
@@ -92,7 +93,7 @@ def execute():
     print("Result Array : ")
     for i in range(len(hashedArray)):
         if (hashedArray[i] is not None) :
-            print(" Index : ", i, " Value : ", hashedArray[i]);
+            print(" Index : ", i, " Value : ", hashedArray[i])
 
 
 def main():
