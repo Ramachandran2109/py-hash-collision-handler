@@ -2,6 +2,10 @@
 Created on Aug 22, 2022
 
 @author: Ramachandran S
+
+Updated On Sep 01, 2022
+
+@author: Anbuselvan Balakrishnan
 '''
 from abc import abstractmethod
 import abc
@@ -92,8 +96,8 @@ class Hashing(abc.ABC):
         
         return self._hashedArray;
     
-    
-        
+
+
     def nearestPrime(self):
         for l in range((self._getLength-1),1,-1):
             flag = True
