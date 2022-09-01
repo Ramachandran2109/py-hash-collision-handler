@@ -18,14 +18,13 @@ class Hashing(abc.ABC):
     __valueCount = 0
     __loadFactor = 0.75
     __initialCapacity = 11
-    _enableRehash : bool = None;
     
-    def __init__(self, maxSize : int, arrayToHash : []):
+    def __init__(self, maxSize : int, enableRehash : bool, arrayToHash : []):
         self._maxSize = maxSize
         self._arrayToHash = arrayToHash
         
-        if (self._enableRehash is None) :
-            self._enableRehash = True
+        self._enableRehash = enableRehash;
+        if (self._enableRehash) :
             self.__initialCapacity = max(ceil(len(self._arrayToHash) / 2), 3)
             self.__threshold = min(floor(self.__initialCapacity * self.__loadFactor), sys.maxsize + 1)
         else :
@@ -64,7 +63,16 @@ class Hashing(abc.ABC):
             self._handleCollision(newIndex, value)
             
         self.__valueCount+=1
+            
         
+    def __handleHashingForIndex(self, index, value):
+        
+        oldValue = self._hashedArray[index]
+        if (oldValue is None):
+            self._hashedArray[index] = value
+        else:
+            self._handleCollision(index, value)
+            
     
     def __rehash(self):
         oldCapacity = self._getLength()
@@ -121,6 +129,14 @@ class Hashing(abc.ABC):
         return self._leftOverValues
     
     
+    def _addToIndex(self, index, value):
+        
+        if (self._enableRehash and self._recursiveCount > 1):
+            self.__rehash()
+            
+        self.__handleHashingForIndex(index, value)
+        
+    
     def _add(self, value):
         
         if (self._enableRehash and self.__valueCount >= self.__threshold):
@@ -138,7 +154,6 @@ class Hashing(abc.ABC):
             print("Unable to find index for the values : ", self._getLeftOverValues())
         
         return self._getHashedArray()
-    
     
         
     def nearestPrime(self):

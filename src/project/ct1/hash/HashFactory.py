@@ -15,19 +15,19 @@ from project.ct1.hash.collisions.handler.SeparateChaining import SeparateChainin
 class HashFactory:
     
     @staticmethod
-    def getInstance(collisionHandlerType : CollisionHandlerType, maxSize : int, arrayToHash : []):
+    def getInstance(collisionHandlerType : CollisionHandlerType, maxSize : int, enableRehash : bool, arrayToHash : []):
         
         match collisionHandlerType:
             case 1:
-                return SeparateChaining(maxSize, arrayToHash)
+                return SeparateChaining(maxSize, enableRehash, arrayToHash)
             case 2:
-                return LinearProbing(maxSize, arrayToHash)
+                return LinearProbing(maxSize, enableRehash, arrayToHash)
             case 3:
-                return QuadraticProbing(maxSize, arrayToHash)
+                return QuadraticProbing(maxSize, enableRehash, arrayToHash)
             case 4:
-                return DoubleHashing(maxSize, arrayToHash)
+                return DoubleHashing(maxSize, enableRehash, arrayToHash)
             case 5:
-                return CuckooHashing(maxSize, arrayToHash)
+                return CuckooHashing(maxSize, enableRehash, arrayToHash)
             case _:
-                return Hashing(maxSize, arrayToHash)
+                return Hashing(maxSize, enableRehash, arrayToHash)
                 

@@ -17,11 +17,6 @@ from project.ct1.hash.Hashing import Hashing
 
 class SeparateChaining(Hashing):
     
-    def __init__(self, maxSize : int, arrayToHash : []):
-        self._enableRehash = False
-        super().__init__(maxSize, arrayToHash)
-        
-    
     def _handleCollision(self, conflictedIndex, newValue):
         oldValue = self._hashedArray[conflictedIndex]
         if (type(oldValue) is list):

@@ -12,6 +12,7 @@ from project.ct1.hash.HashFactory import HashFactory
 
 inputArray = []
 hashedArray = []
+enableRehash = False
 collisionHandlerType = 0
 
 #criteria given for the max array size in the assignment
@@ -64,6 +65,16 @@ def getUserInputs():
             break
         else:
             print("Value should not exceed more than {}".format(max_size.get(collisionHandlerType)))
+    
+    if (collisionHandlerType != 1):
+        global enableRehash
+        canEnableRehashStr = input("Enable Rehashing (Y/N) : ")
+        match canEnableRehashStr.upper() :
+            case "Y" | "T" | "YES" | "TRUE":
+                enableRehash = True
+            case _:
+                enableRehash = False
+                
    
                    
 def execute():
@@ -71,7 +82,7 @@ def execute():
     print("Input values : ", inputArray)
     print("Collision Handler : ", CollisionHandlerType(collisionHandlerType).name)
     
-    hashing = HashFactory.getInstance(collisionHandlerType, max_size.get(collisionHandlerType), inputArray)
+    hashing = HashFactory.getInstance(collisionHandlerType, max_size.get(collisionHandlerType), enableRehash, inputArray)
     hashedArray = hashing.doHash()
     
     print("")

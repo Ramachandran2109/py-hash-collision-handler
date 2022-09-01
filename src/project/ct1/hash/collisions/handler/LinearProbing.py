@@ -17,22 +17,10 @@ from project.ct1.hash.Hashing import Hashing
 
 class LinearProbing(Hashing):
     
-    def _handleCollision(self, conflictedIndex, newValue): 
-        while(1): 
-                if conflictedIndex==len(self._hashedArray)-1:
-                    oldValue = self._hashedArray[conflictedIndex]
-                    if oldValue :
-                        conflictedIndex=0
-                    else:  
-                        #Calculating Next Possible Index
-                        self._hashedArray[conflictedIndex]=newValue
-                elif conflictedIndex<len(self._hashedArray)-1:  
-                    oldValue = self._hashedArray[conflictedIndex]
-                    if oldValue : 
-                        conflictedIndex=conflictedIndex+1
-                    else:  
-                        #Calculating Next Possible Index 
-                        self._hashedArray[conflictedIndex]=newValue
-                else:
-                    #if  hash id is greater than table index then new hashid will be start from index 0 in cyclic order
-                    conflictedIndex=0
+    def _handleCollision(self, conflictedIndex, newValue):
+        if (conflictedIndex == self._getLength() -1):
+            conflictedIndex = -1;
+            self._recursiveCount += 1;
+            
+        self._addToIndex(conflictedIndex + 1, newValue);
+        
