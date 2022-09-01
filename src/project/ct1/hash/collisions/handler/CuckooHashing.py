@@ -38,7 +38,7 @@ class CuckooHashing(Hashing):
     def _handleCollision(self, conflictedIndex, newValue):
         
         if (self.__secondaryHashing is None and self._getBaseValueDivisor() == 1):
-            self.__secondaryHashing = CuckooHashing(self._maxSize, self._arrayToHash)
+            self.__secondaryHashing = CuckooHashing(self._maxSize, self._enableRehash, self._arrayToHash)
             self.__secondaryHashing._setBaseValueDivisor(self.__secondaryHashing._getPrime())
             self.__secondaryHashing.__primaryHashing = self
             
