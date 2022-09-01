@@ -8,6 +8,7 @@ from abc import abstractmethod
 import abc
 from math import ceil, floor
 import sys
+
 from project.ct1.util.NumberUtil import NumberUtil
 
 
@@ -17,24 +18,30 @@ class Hashing(abc.ABC):
     __valueCount = 0
     __loadFactor = 0.75
     __initialCapacity = 11
+    _enableRehash : bool = None;
     
     def __init__(self, maxSize : int, arrayToHash : []):
         self._maxSize = maxSize
         self._arrayToHash = arrayToHash
         
-        self.__initialCapacity = max(ceil(len(self._arrayToHash) / 2), 3)
-        self.__threshold = min(floor(self.__initialCapacity * self.__loadFactor), sys.maxsize + 1)
-        
+        if (self._enableRehash is None) :
+            self._enableRehash = True
+            self.__initialCapacity = max(ceil(len(self._arrayToHash) / 2), 3)
+            self.__threshold = min(floor(self.__initialCapacity * self.__loadFactor), sys.maxsize + 1)
+        else :
+            self.__threshold = len(self._arrayToHash)
+            self.__initialCapacity = len(self._arrayToHash)
+            
         self.__initHashedArray__(self.__initialCapacity)
         self.__baseValueDivisor = 1
         
         self._leftOverValues = set()
         self._recursiveCount = 0
-        self._enableRehash = True
+        
         
     
     def __initHashedArray__(self, capacity):
-        self._hashedArray = ["" for _ in range(capacity)]
+        self._hashedArray = [None for _ in range(capacity)]
         self.__nextPrime = NumberUtil.getPrime(self._getLength())
         
         
@@ -51,7 +58,7 @@ class Hashing(abc.ABC):
         newIndex = self.__hashFunction(value)
         oldValue = self._hashedArray[newIndex]
         
-        if (oldValue == ''):
+        if (oldValue is None):
             self._hashedArray[newIndex] = value
         else:
             self._handleCollision(newIndex, value)
@@ -116,7 +123,7 @@ class Hashing(abc.ABC):
     
     def _add(self, value):
         
-        if (self.__valueCount >= self.__threshold and self._enableRehash):
+        if (self._enableRehash and self.__valueCount >= self.__threshold):
             self.__rehash()
             
         self.__handleHashing(value)

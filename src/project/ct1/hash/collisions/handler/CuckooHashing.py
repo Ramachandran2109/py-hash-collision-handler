@@ -43,7 +43,7 @@ class CuckooHashing(Hashing):
             self.__secondaryHashing.__primaryHashing = self
             
         if (self._recursiveCount >= 100):
-            if (newValue != ''):
+            if (newValue is not None):
                 self._leftOverValues.add(newValue)
             return 
         

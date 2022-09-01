@@ -47,13 +47,14 @@ def getCollisionHandlerType():
                 for i in range(len(collisionHandlerTypes)) :
                     print (collisionHandlerTypes[i].value,". ", collisionHandlerTypes[i].name)
 
+
 def getUserInputs():
     while True:
         print("")
         totalValues = ast.literal_eval(input("Enter number of values to be inserted (Max : {}) : ".format(max_size.get(collisionHandlerType))))
         if (totalValues <= max_size.get(collisionHandlerType)):
             global inputArray
-            inputArray = ["" for i in range(totalValues)]
+            inputArray = [None for i in range(totalValues)]
             
             global hashedArray
             hashedArray = []
@@ -64,7 +65,7 @@ def getUserInputs():
         else:
             print("Value should not exceed more than {}".format(max_size.get(collisionHandlerType)))
    
-                    
+                   
 def execute():
     print("")
     print("Input values : ", inputArray)
@@ -77,13 +78,23 @@ def execute():
     print("After Hashing : ", hashedArray)
     print("")
     
+    print("Result Array : ")
+    for i in range(len(hashedArray)):
+        if (hashedArray[i] is not None) :
+            print(" Index : ", i, " Value : ", hashedArray[i]);
 
-print("*****BEGIN*****")
-print("")
 
-getCollisionHandlerType()
-getUserInputs()
-execute()
+def main():
+    print("*****BEGIN*****")
+    print("")
+    
+    getCollisionHandlerType()
+    getUserInputs()
+    execute()
+    
+    print("")
+    print("*****END*****")
+    
 
-print("")
-print("*****END*****")
+if __name__=="__main__":
+    main()
