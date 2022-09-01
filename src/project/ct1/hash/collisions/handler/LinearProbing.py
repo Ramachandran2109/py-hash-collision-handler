@@ -18,16 +18,21 @@ from project.ct1.hash.Hashing import Hashing
 class LinearProbing(Hashing):
     
     def _handleCollision(self, conflictedIndex, newValue): 
-        while(1):
-                oldValue = self._hashedArray[conflictedIndex];
-                if oldValue :
-                    if conflictedIndex==len(self._hashedArray)-1:
+        while(1): 
+                if conflictedIndex==len(self._hashedArray)-1:
+                    oldValue = self._hashedArray[conflictedIndex]
+                    if oldValue :
                         conflictedIndex=0
                     else:  
-                        conflictedIndex=conflictedIndex+1
-                else: 
-                    if  self._hashedArray[conflictedIndex] != None:
-                        self._handleCollision(conflictedIndex,newValue)
-                    else:
+                        #Calculating Next Possible Index
                         self._hashedArray[conflictedIndex]=newValue
-                        break
+                elif conflictedIndex<len(self._hashedArray)-1:  
+                    oldValue = self._hashedArray[conflictedIndex]
+                    if oldValue : 
+                        conflictedIndex=conflictedIndex+1
+                    else:  
+                        #Calculating Next Possible Index 
+                        self._hashedArray[conflictedIndex]=newValue
+                else:
+                    #if  hash id is greater than table index then new hashid will be start from index 0 in cyclic order
+                    conflictedIndex=0

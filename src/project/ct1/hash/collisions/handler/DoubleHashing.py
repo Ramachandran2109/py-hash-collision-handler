@@ -18,14 +18,27 @@ from project.ct1.hash.Hashing import Hashing
 class DoubleHashing(Hashing):
     
     def _handleCollision(self, conflictedIndex, newValue):
-        
-            oldValue = self._hashedArray[conflictedIndex]
-            if oldValue:
-                Secondary_conflictedIndex=self.nearestPrime() - (newValue % self.nearestPrime()) 
-                if Secondary_conflictedIndex==len(self._hashedArray)-1:
-                    Secondary_conflictedIndex=0 
-                else: 
-                    conflictedIndex=(conflictedIndex + Secondary_conflictedIndex) % len(self._hashedArray)
-                    if  self._hashedArray[conflictedIndex] != None:
-                            self._handleCollision(conflictedIndex,newValue)
+            i=1
+            PreviouseIndex=0
+            while(1):  
+                if conflictedIndex==len(self._hashedArray)-1:
+                    oldValue = self._hashedArray[conflictedIndex]; 
+                    if oldValue: 
+                        conflictedIndex=0 
+                    else:  
+                        self._hashedArray[conflictedIndex]=newValue
+                elif conflictedIndex<len(self._hashedArray)-1: 
+                    oldValue = self._hashedArray[conflictedIndex]; 
+                    if oldValue: 
+                        #Calculating Next Possible Index
+                        Secondary_conflictedIndex=self.nearestPrime() - (newValue % self.nearestPrime()) 
+                        Secondary_conflictedIndex=(conflictedIndex + (i*Secondary_conflictedIndex)) % len(self._hashedArray)
+                        PreviouseIndex=conflictedIndex
+                        conflictedIndex=Secondary_conflictedIndex
+                        i+=1
+                    else: 
+                        self._hashedArray[conflictedIndex]=newValue
+                else:
+                    #if  hash id is greater than table index then new hashid will be start from index 0 in cyclic order
+                    conflictedIndex= ((0+conflictedIndex) -(len(self._hashedArray)-PreviouseIndex))-1
             
