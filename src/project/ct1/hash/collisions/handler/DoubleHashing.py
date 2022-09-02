@@ -26,9 +26,9 @@ class DoubleHashing(Hashing):
     
     def _handleCollision(self, conflictedIndex, newValue):
         if (conflictedIndex >= self._getLength() -1):
-            conflictedIndex = -1;
-            self._recursiveCount += 1;
-            self.__counter = 0;
+            conflictedIndex = -1
+            self._recursiveCount += 1
+            self.__counter = 0
         else:
             if (self.__counter is None):
                 self.__counter = 0

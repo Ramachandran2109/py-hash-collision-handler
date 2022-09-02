@@ -159,17 +159,3 @@ class Hashing(abc.ABC):
         
         return self._getHashedArray()
     
-        
-    def nearestPrime(self):
-        for l in range((self._getLength-1),1,-1):
-            flag = True
-            for i in range(2, int(l**0.5)+1):
-                    
-                if l%i == 0:
-                    flag = False
-                    break
-
-            if flag:
-                return l
-
-        return 3

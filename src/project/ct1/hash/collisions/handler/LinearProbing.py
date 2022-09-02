@@ -19,8 +19,8 @@ class LinearProbing(Hashing):
     
     def _handleCollision(self, conflictedIndex, newValue):
         if (conflictedIndex == self._getLength() -1):
-            conflictedIndex = -1;
-            self._recursiveCount += 1;
+            conflictedIndex = -1
+            self._recursiveCount += 1
             
         self._addToIndex(conflictedIndex + 1, newValue);
         
