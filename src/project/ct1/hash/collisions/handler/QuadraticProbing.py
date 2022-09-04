@@ -6,10 +6,6 @@ Created on Aug 20, 2022
 Requirement : 
     Implement doHash table where collisions are handled using quadratic probing. Keep MAX size of arr in hashtable as 20.
     
-@attention: handleCollision logic is implemented by.
-    Name : Anbuselvan Balakrishnan
-    Registration Number : 22421005928
-    
 '''
 
 from project.ct1.hash.Hashing import Hashing
